@@ -123,7 +123,7 @@ train$CouncilArea <- as.factor(train$CouncilArea)
 str(train)
 
 #=================================================================
-# Impute Missing Ages
+# Impute Missing Values
 #=================================================================
 # For back up of values
 temp = data.frame(train$CouncilArea)
