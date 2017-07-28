@@ -1,193 +1,149 @@
 #=======================================================================================
 #
-# File:        ML_Titanic_Data_Set.R
+# File:        Whatsapp_parser.R
 # Author:      Junaid Effendi
-# Description: This code is taken from DataScienceDojo Tutorial and 
-#              has been modified to increase the accuracy.
+# Description: This code parses whatsap group chat files, you may need to customize it.
 #
 #=======================================================================================
 
-#install and load require packages
-install.packages(c("e1071", "caret", "doSNOW", "ipred", "xgboost", "dplyr"))
-library(e1071)
-library(caret)
-library(doSNOW)
-library(ipred)
-library(xgboost)
-library(dplyr)
+#========================================================
+# Install and Load Packages
+#========================================================
+install.packages(c("stringr", "zoo", "ggplot2", "scales", "dplyr"))
+library("stringr")
+library("zoo")
+library("ggplot2")
+library("dplyr")
+library("scales")
+
+#========================================================
+# Loading Data
+#========================================================
+all_data = readLines("whatsap_friends.txt")
+head(all_data)
+
+#========================================================
+# Data Wrangling and Cleaning
+#========================================================
+
+#Removing the first message
+all_data = all_data[-1]
+
+#Extracting date and time  
+date_time <- format(strptime(all_data, "%m/%d/%y, %I:%M %p"),"%m/%d/%y, %H:%M")
+head(date_time)
+
+#Extracting date
+date = gsub(",.*$","",date_time) #Fetching all before ","
+
+#Extracting time
+time = gsub("^.*,","",date_time) #Fetching all after ","
+time = str_trim(time) #Removing spaces from both ends
+time 
+
+sender <- 'sender' #Temorary Data
+message <- all_data
+
+#Creating Data Frame
+clean_data = data.frame(date,time,sender,message)
+head(clean_data)
+
+#Extracting sender and message from the data frame
+sender_message = clean_data[complete.cases(clean_data),4] 
+sender_message = gsub("^.*?-","",sender_message)
+sender_message = str_trim(sender_message) 
+
+#Extracting message
+message = gsub("^.*?:","",sender_message) 
+message = str_trim(message) #Removing spaces from both ends
+head(message)
+#Updating the data frame with new message data
+clean_data$message <- as.character(clean_data$message)
+clean_data[complete.cases(clean_data),4] <- message
+
+#Extracting sender names
+sender = gsub("?:.*$","",sender_message) 
+# Removing prefixes and other names from sender "Customized"
+sender = gsub("NED?.*$","",sender)
+sender = str_trim(sender) #Removing spaces from both ends
+head(sender) 
+#Updating the data frame with new sender data
+clean_data$sender <- as.character(clean_data$sender)
+clean_data[complete.cases(clean_data),3] <- sender
+
+#Replacing remaining "sender" values with NA
+clean_data[clean_data=="sender"]<- NA
 
 
-#=================================================================
-# Load Data
-#=================================================================
-
-train <- read.csv("titanic_dataset.csv", stringsAsFactors = FALSE)
-View(train)
-
-
-#=================================================================
-# Data Wrangling
-#=================================================================
-
-# Replace missing embarked values with mode.
-table(train$Embarked)
-train$Embarked[train$Embarked == ""] <- "S"
+#Using transform function from Zoo Package 
+#Filling NA with previous values
+#Detailed explanation > www.tensorflowhub.org
+clean_data <- transform(clean_data, date = na.locf(date), time = na.locf(time),
+                        sender = na.locf(sender))
 
 
-# Add a feature for tracking missing ages.
-summary(train$Age)
-train$MissingAge <- ifelse(is.na(train$Age),
-                           "Y", "N")
+#This is a custom function, 
+#Use only if you want to remove unknown contacts
+clean_data = subset(clean_data, !grepl("92 334", sender))
+nrow(clean_data)
+
+#Refactorizing 
+clean_data$sender <- as.factor(clean_data$sender)
 
 
-# Add a feature for family size.
-train$FamilySize <- 1 + train$SibSp + train$Parch
+#Exploring Data
+summary(clean_data)
+nrow(clean_data)
 
+summary(clean_data$sender,maxsum = 25)
 
+#========================================================
+# Feature Engineering
+#========================================================
+#Finding length of each message
+clean_data$message_length <- nchar(clean_data$message)
+summary(clean_data$message_length)
 
-# Modification (New Feature named Title introduced from Names)
-train$Name <- as.character(train$Name)
-strsplit(train$Name[1], split='[,.]')
-strsplit(train$Name[1], split='[,.]')[[1]]
-strsplit(train$Name[1], split='[,.]')[[1]][2]
-train$Title <- sapply(train$Name, FUN=function(x) {strsplit(x, split='[,.]')[[1]][2]})
-train$Title <- sub(' ', '', train$Title)
-table(train$Title)
+#========================================================
+# Data Visualization
+#========================================================
 
-train$Title[train$Title %in% c('Capt', 'Don', 'Major', 'Sir', 'Col')] <- 'Sir'
-train$Title[train$Title %in% c('Dona', 'Lady', 'the Countess', 'Jonkheer', 
-                               'Mlle', 'Mme', 'Ms')] <- 'Lady'
+#===== Plot 1 =====#
+ggplot(clean_data, aes(sender))+
+  geom_bar()
 
-#Taking log10 for the feature Fare
-train$Fare <- ifelse(train$Fare !=0,
-                     log10(train$Fare), 0)
+#===== Plot 2 =====#
+ggplot(clean_data, aes(sender,message_length))+
+  geom_bar(stat="identity")
 
-# Set up factors.
-train$Survived <- as.factor(train$Survived)
-train$Pclass <- as.factor(train$Pclass)
-train$Sex <- as.factor(train$Sex)
-train$Embarked <- as.factor(train$Embarked)
-train$MissingAge <- as.factor(train$MissingAge)
-train$Title <- as.factor(train$Title)
+#===== Plot 3 =====#
+#Mean of the length of each message for each sender
+grouped_mean_length <- aggregate(message_length ~ sender, clean_data, mean)
 
+ggplot(grouped_mean_length, aes(sender,message_length))+
+  geom_bar(stat="identity")
 
-# Subset data to features we wish to keep/use.
-features <- c("Survived", "Pclass", "Sex", "Age", "SibSp",
-              "Parch", "Fare", "Embarked", "Title",
-              "MissingAge","FamilySize")
-train <- train[, features]
-str(train)
+#===== Plot 4 =====#
+#No of records across date
+date_count<-data.frame(table(clean_data$date))
+colnames(date_count) <- c("date", "count")
 
+#Scatter plot for the number of messages per given date
+ggplot(date_count, aes(as.Date(date, "%m/%d/%y"),count))+
+  geom_line()+
+  scale_x_date(breaks = date_breaks("1 months"),labels = date_format("%m/%y"))+
+  xlab("date")+
+  ylab("number of messages")
 
-#=================================================================
-# Impute Missing Ages
-#=================================================================
+#===== Plot 5 =====#
+#No of records across date and sender
+date_sender_count<-data.frame(table(clean_data$sender,clean_data$date))
+colnames(date_sender_count) <- c("sender","date", "count")
 
-# Caret supports a number of mechanism for imputing (i.e., 
-# predicting) missing values. Leverage bagged decision trees
-# to impute missing values for the Age feature.
+#Scatter plot for the number of messages for each sender per given date
+ggplot(date_sender_count, aes(as.Date(date, "%m/%d/%y"), count, color=sender))+
+  geom_line()+
+  scale_x_date(breaks = date_breaks("1 months"),labels = date_format("%m/%y"))+
+  xlab("date")+
+  ylab("number of messages")
 
-# First, transform all feature to dummy variables.
-dummy.vars <- dummyVars(~ ., data = train[, -1])
-train.dummy <- predict(dummy.vars, train[, -1])
-View(train.dummy)
-
-# Now, impute!
-pre.process <- preProcess(train.dummy, method = "bagImpute")
-imputed.data <- predict(pre.process, train.dummy)
-View(imputed.data)
-
-train$Age <- imputed.data[, 6]
-View(train)
-
-
-#=================================================================
-# Split Data
-#=================================================================
-
-# Use caret to create a 70/30% split of the training data,
-# keeping the proportions of the Survived class label the
-# same across splits.
-set.seed(54321)
-indexes <- createDataPartition(train$Survived,
-                               times = 1,
-                               p = 0.7,
-                               list = FALSE)
-titanic.train <- train[indexes,]
-titanic.test <- train[-indexes,]
-
-table(titanic.train$Title)
-table(titanic.test$Title)
-
-# Examine the proportions of the Survived class lable across
-# the datasets.
-prop.table(table(train$Survived))
-prop.table(table(titanic.train$Survived))
-prop.table(table(titanic.test$Survived))
-
-
-#=================================================================
-# Train Model
-#=================================================================
-
-# Set up caret to perform 10-fold cross validation repeated 3 
-# times and to use a grid search for optimal model hyperparamter
-# values.
-train.control <- trainControl(method = "repeatedcv",
-                              number = 10,
-                              repeats = 3,
-                              search = "grid")
-
-
-# Leverage a grid search of hyperparameters for xgboost. See 
-# the following presentation for more information:
-# https://www.slideshare.net/odsc/owen-zhangopen-sourcetoolsanddscompetitions1
-tune.grid <- expand.grid(eta = c(0.05, 0.075, 0.1),
-                         nrounds = c(50, 75, 100),
-                         max_depth = 6:8,
-                         min_child_weight = c(2.0, 2.25, 2.5),
-                         colsample_bytree = c(0.3, 0.4, 0.5),
-                         gamma = 0,
-                         subsample = 1)
-View(tune.grid)
-
-
-# Use the doSNOW package to enable caret to train in parallel.
-# While there are many package options in this space, doSNOW
-# has the advantage of working on both Windows and Mac OS X.
-#
-# Create a socket cluster using 10 processes. 
-#
-# NOTE - Tune this number based on the number of cores/threads 
-# available on your machine!!!
-#
-cl <- makeCluster(4, type = "SOCK")
-
-# Register cluster so that caret will know to train in parallel.
-registerDoSNOW(cl)
-
-# Train the xgboost model using 10-fold CV repeated 3 times 
-# and a hyperparameter grid search to train the optimal model.
-caret.cv <- train(Survived ~ ., 
-                  data = titanic.train,
-                  method = "xgbTree",
-                  tuneGrid = tune.grid,
-                  trControl = train.control)
-
-stopCluster(cl)
-
-
-
-# Examine caret's processing results
-caret.cv
-
-
-# Make predictions on the test set using a xgboost model 
-# trained on all 625 rows of the training set using the 
-# found optimal hyperparameter values.
-preds <- predict(caret.cv, titanic.test)
-
-
-# Use caret's confusionMatrix() function to estimate the 
-# effectiveness of this model on unseen, new data.
-confusionMatrix(preds, titanic.test$Survived)
