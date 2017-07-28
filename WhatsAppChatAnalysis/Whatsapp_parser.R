@@ -7,13 +7,14 @@
 #=======================================================================================
 
 #========================================================
-# Loading Required Package
+# Install and Load Packages
 #========================================================
+install.packages(c("stringr", "zoo", "ggplot2", "scales", "dplyr"))
 library("stringr")
 library("zoo")
 library("ggplot2")
 library("dplyr")
-library(scales)
+library("scales")
 
 #========================================================
 # Loading Data
@@ -33,7 +34,7 @@ date_time <- format(strptime(all_data, "%m/%d/%y, %I:%M %p"),"%m/%d/%y, %H:%M")
 head(date_time)
 
 #Extracting date
-date = gsub(",.*$","",date_time)
+date = gsub(",.*$","",date_time) #Fetching all before ","
 
 #Extracting time
 time = gsub("^.*,","",date_time) #Fetching all after ","
@@ -48,6 +49,7 @@ clean_data = data.frame(date,time,sender,message)
 head(clean_data)
 
 #Extracting sender and message from the data frame
+#Fetching only complete cases
 sender_message = clean_data[complete.cases(clean_data),4] 
 sender_message = gsub("^.*?-","",sender_message)
 sender_message = str_trim(sender_message) 
@@ -89,9 +91,8 @@ nrow(clean_data)
 #Refactorizing 
 clean_data$sender <- as.factor(clean_data$sender)
 
-#========================================================
-# Exploring Data
-#========================================================
+
+#Exploring Data
 summary(clean_data)
 nrow(clean_data)
 
@@ -117,24 +118,13 @@ ggplot(clean_data, aes(sender,message_length))+
   geom_bar(stat="identity")
 
 #===== Plot 3 =====#
-ggplot(clean_data, aes(sender,message_length))+
-  geom_bar(stat="identity")
-
-#===== Plot 4 =====#
-#Sum of the length of each message for each sender
-grouped_length <- aggregate(message_length ~ sender, clean_data, sum)
-
-ggplot(grouped_length, aes(sender,message_length))+
-  geom_bar(stat="identity")
-
-#===== Plot 5 =====#
 #Mean of the length of each message for each sender
 grouped_mean_length <- aggregate(message_length ~ sender, clean_data, mean)
 
 ggplot(grouped_mean_length, aes(sender,message_length))+
   geom_bar(stat="identity")
 
-#===== Plot 6 =====#
+#===== Plot 4 =====#
 #No of records across date
 date_count<-data.frame(table(clean_data$date))
 colnames(date_count) <- c("date", "count")
@@ -146,7 +136,7 @@ ggplot(date_count, aes(as.Date(date, "%m/%d/%y"),count))+
   xlab("date")+
   ylab("number of messages")
 
-#===== Plot 7 =====#
+#===== Plot 5 =====#
 #No of records across date and sender
 date_sender_count<-data.frame(table(clean_data$sender,clean_data$date))
 colnames(date_sender_count) <- c("sender","date", "count")
@@ -157,7 +147,3 @@ ggplot(date_sender_count, aes(as.Date(date, "%m/%d/%y"), count, color=sender))+
   scale_x_date(breaks = date_breaks("1 months"),labels = date_format("%m/%y"))+
   xlab("date")+
   ylab("number of messages")
-
-
-
-
