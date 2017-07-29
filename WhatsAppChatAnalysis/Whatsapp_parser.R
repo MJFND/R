@@ -115,18 +115,21 @@ summary(clean_data$message_length)
 
 #===== Plot 1 =====#
 ggplot(clean_data, aes(sender))+
-  geom_bar()
+  geom_bar()+
+  ylab("number of messages")
 
 #===== Plot 2 =====#
 ggplot(clean_data, aes(sender,message_length))+
-  geom_bar(stat="identity")
+  geom_bar(stat="identity")+
+  ylab("sum of message length")
 
 #===== Plot 3 =====#
 #Mean of the length of each message for each sender
 grouped_mean_length <- aggregate(message_length ~ sender, clean_data, mean)
 
 ggplot(grouped_mean_length, aes(sender,message_length))+
-  geom_bar(stat="identity")
+  geom_bar(stat="identity")+
+  ylab("mean of message length")
 
 #===== Plot 4 =====#
 #No of records across date
