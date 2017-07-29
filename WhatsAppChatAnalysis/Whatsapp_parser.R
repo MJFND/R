@@ -3,7 +3,7 @@
 # File:        Whatsapp_parser.R
 # Author:      Junaid Effendi
 # Description: This code parses whatsap group chat files, you may need to customize it.
-#
+# Blog Link: http://www.tensorflowexamples.com/2017/07/analyzing-whatsapp-group-chat-using-r.html
 #=======================================================================================
 
 #========================================================
@@ -78,7 +78,7 @@ clean_data[clean_data=="sender"]<- NA
 
 #Using transform function from Zoo Package 
 #Filling NA with previous values
-#Detailed explanation > www.tensorflowhub.org
+#Detailed explanation > http://www.tensorflowexamples.com/2017/07/analyzing-whatsapp-group-chat-using-r.html
 clean_data <- transform(clean_data, date = na.locf(date), time = na.locf(time),
                         sender = na.locf(sender))
 
