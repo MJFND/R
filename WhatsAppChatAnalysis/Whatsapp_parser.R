@@ -101,8 +101,12 @@ summary(clean_data$sender,maxsum = 25)
 #========================================================
 # Feature Engineering
 #========================================================
+#Setting media messages to empty space for length 0
+clean_data[clean_data=="<Media omitted>"]<-""
 #Finding length of each message
 clean_data$message_length <- nchar(clean_data$message)
+#Restting media messages 
+clean_data[clean_data==""]<-"<Media omitted>"
 summary(clean_data$message_length)
 
 #========================================================
