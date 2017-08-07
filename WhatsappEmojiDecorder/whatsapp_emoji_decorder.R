@@ -64,9 +64,6 @@ emoji_human = emoji_loader("whatsapp_emoji_human.csv")
 head(emoji_human)
 emoji_human$Symbols
 
-# =====================================
-
-
 #========================================================
 # Human Emoji Function
 #========================================================
@@ -80,10 +77,7 @@ emoji_human_color_ignore <- function(data)
   return(data)
 }
 
-
 emoji_human <- emoji_human_color_ignore(emoji_human)
-
-
 
 #========================================================
 # Emoji Replacer Function
@@ -99,12 +93,9 @@ emoji_replacer <- function(data)
   return(clean_data_without_media)
 }
 
-
 clean_data_without_media <- emoji_replacer(emoji_all)
 clean_data_without_media <- emoji_replacer(emoji_custom)
 clean_data_without_media <- emoji_replacer(emoji_human)
-
-# =========================================================
 
 #Creating columns for each emoji with count
 emoji_array <- as.character(emoji_all$Names)
@@ -135,4 +126,3 @@ clean_data_without_media_with_emoji <- clean_data_without_media_with_emoji[,-unu
 
 #Removing emoji- from column names
 names(clean_data_without_media_with_emoji) <- gsub("^.*?emoji-", "", names(clean_data_without_media_with_emoji))
-
