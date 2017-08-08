@@ -49,12 +49,12 @@ media_remove <- function(clean_data)
 #' Load Emojis
 #'
 #' This function loads the emojis from csv file.
-#' @param filename , string
+#' @param filepath , string, enter file path or file name if present in the same directory
 #' @examples
 #' emoji_all = emoji_loader("whatsapp_emoji_all.csv")
-emoji_loader <- function(filename)
+emoji_loader <- function(filepath)
 {
-  emoji_data = read.csv(filename)
+  emoji_data = read.csv(filepath)
   head(emoji_data)
   
   #Adding emoji- to each name to extract patterns with accuracy
