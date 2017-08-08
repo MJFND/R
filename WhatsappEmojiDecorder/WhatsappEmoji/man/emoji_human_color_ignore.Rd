@@ -4,10 +4,10 @@
 \alias{emoji_human_color_ignore}
 \title{Human Emojis}
 \usage{
-emoji_human_color_ignore(data)
+emoji_human_color_ignore(emoji_data)
 }
 \arguments{
-\item{data}{, data frame}
+\item{emoji_data}{, data frame}
 }
 \description{
 This function is used to ignore the skin tones and considers all colors as same.

@@ -4,15 +4,17 @@
 \alias{emoji_replacer}
 \title{Replace Emoji with name}
 \usage{
-emoji_replacer(data)
+emoji_replacer(emoji_data, text_data)
 }
 \arguments{
-\item{data}{, data frame}
+\item{emoji_data}{, data frame}
+
+\item{text_data}{, data frame}
 }
 \description{
 This function replaces all the emojis with their respective names.
 }
 \examples{
-clean_data_without_media <- emoji_replacer(emoji_all)
+clean_data_without_media_emoji_replaced <- emoji_replacer(emoji_all, clean_data_without_media)
 }
 

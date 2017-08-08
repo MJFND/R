@@ -48,7 +48,7 @@ media_remove <- function(clean_data)
 #========================================================
 #' Load Emojis
 #'
-#' This function loads the emojis from csv file.
+#' This function loads the emojis from csv file and cleans them for usage. 
 #' @param filepath , string, enter file path or file name if present in the same directory
 #' @examples
 #' emoji_all = emoji_loader("whatsapp_emoji_all.csv")
@@ -84,14 +84,14 @@ emoji_loader <- function(filepath)
 #' Human Emojis
 #'
 #' This function is used to ignore the skin tones and considers all colors as same.
-#' @param data , data frame
+#' @param emoji_data , data frame
 #' @examples
 #' emoji_human <- emoji_human_color_ignore(emoji_human)
-emoji_human_color_ignore <- function(data)
+emoji_human_color_ignore <- function(emoji_data)
 {
-  data$Names <- gsub(":.*$","",data$Names) 
+  emoji_data$Names <- gsub(":.*$","",emoji_data$Names) 
   
-  return(data)
+  return(emoji_data)
 }
 
 #========================================================
@@ -102,16 +102,17 @@ emoji_human_color_ignore <- function(data)
 #' Replace Emoji with name
 #'
 #' This function replaces all the emojis with their respective names.
-#' @param data , data frame
+#' @param emoji_data , data frame
+#' @param text_data , data frame
 #' @examples
-#' clean_data_without_media <- emoji_replacer(emoji_all)
-emoji_replacer <- function(data)
+#' clean_data_without_media_emoji_replaced <- emoji_replacer(emoji_all, clean_data_without_media)
+emoji_replacer <- function(emoji_data, text_data)
 {
-  for(i in seq_len(nrow(data))){
-    clean_data_without_media_temp = gsub(data[i,2],data[i,1],clean_data_without_media[,4])
-    clean_data_without_media$message  = gsub(data[i,2],data[i,1],clean_data_without_media$message)
+  for(i in seq_len(nrow(emoji_data))){
+    clean_data_without_media_temp = gsub(emoji_data[i,2],emoji_data[i,1],text_data[,4])
+    text_data$message  = gsub(emoji_data[i,2],emoji_data[i,1],text_data$message)
   }
-  return(clean_data_without_media)
+  return(text_data)
 }
 
 
@@ -124,17 +125,18 @@ emoji_replacer <- function(data)
 #' New column with emoji count
 #'
 #' This function replaces creates new column for each emoji with their count.
-#' @param data , data frame
+#' @param emoji_data , data frame
+#' @param text_data , data frame
 #' @examples
 #' clean_data_without_media_with_emoji <- make_emoji_count_column(clean_data_without_media)
-make_emoji_count_column <- function(data)
+make_emoji_count_column <- function(emoji_data, text_data)
 {
   #Creating columns for each emoji with count
-  emoji_array <- as.character(emoji_all$Names)
-  clean_data_without_media_with_emoji <- data
+  emoji_array <- as.character(emoji_data$Names)
+  clean_data_without_media_with_emoji <- text_data
   
   for(i in emoji_array){
-    clean_data_without_media_with_emoji[,i] <- str_count(data$message,i)
+    clean_data_without_media_with_emoji[,i] <- str_count(text_data$message,i)
     
   }
   return(clean_data_without_media_with_emoji)
@@ -148,16 +150,16 @@ make_emoji_count_column <- function(data)
 #' Remove unused emojis
 #'
 #' This function removes all emoji columns that have sum equal to zero.
-#' @param data_emoji , data frame
+#' @param text_data , data frame
 #' @examples
 #' clean_data_without_media_with_emoji <- remove_unused_emoji(clean_data_without_media_with_emoji)
-remove_unused_emoji <- function(data_emoji)
+remove_unused_emoji <- function(text_data)
 {
   unused_emoji_index = c(NA)
   #Getting indexes of unused emojis
-  for(i in 6:length(data_emoji)){
-    sum = sum(data_emoji[,i])
-    cat(sprintf("%s = %i \n",names(data_emoji)[i],sum))
+  for(i in 6:length(text_data)){
+    sum = sum(text_data[,i])
+    cat(sprintf("%s = %i \n",names(text_data)[i],sum))
     if(sum == 0)
     {
       unused_emoji_index <-  c(unused_emoji_index,i)
@@ -167,12 +169,12 @@ remove_unused_emoji <- function(data_emoji)
   length(unused_emoji_index)
   
   #Removing unused emojis
-  data_emoji <- data_emoji[,-unused_emoji_index]
+  text_data <- text_data[,-unused_emoji_index]
   
   #Removing emoji- from column names
-  names(data_emoji) <- gsub("^.*?emoji-", "", names(data_emoji))
+  names(text_data) <- gsub("^.*?emoji-", "", names(text_data))
   
-  return(data_emoji)
+  return(text_data)
 }
 
 

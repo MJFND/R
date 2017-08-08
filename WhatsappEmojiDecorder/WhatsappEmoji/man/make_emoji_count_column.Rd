@@ -4,10 +4,12 @@
 \alias{make_emoji_count_column}
 \title{New column with emoji count}
 \usage{
-make_emoji_count_column(data)
+make_emoji_count_column(emoji_data, text_data)
 }
 \arguments{
-\item{data}{, data frame}
+\item{emoji_data}{, data frame}
+
+\item{text_data}{, data frame}
 }
 \description{
 This function replaces creates new column for each emoji with their count.

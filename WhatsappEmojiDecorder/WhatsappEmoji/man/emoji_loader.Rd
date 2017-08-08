@@ -10,7 +10,7 @@ emoji_loader(filepath)
 \item{filepath}{, string, enter file path or file name if present in the same directory}
 }
 \description{
-This function loads the emojis from csv file.
+This function loads the emojis from csv file and cleans them for usage.
 }
 \examples{
 emoji_all = emoji_loader("whatsapp_emoji_all.csv")

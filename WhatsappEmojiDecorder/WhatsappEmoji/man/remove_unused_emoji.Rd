@@ -4,10 +4,10 @@
 \alias{remove_unused_emoji}
 \title{Remove unused emojis}
 \usage{
-remove_unused_emoji(data_emoji)
+remove_unused_emoji(text_data)
 }
 \arguments{
-\item{data_emoji}{, data frame}
+\item{text_data}{, data frame}
 }
 \description{
 This function removes all emoji columns that have sum equal to zero.
