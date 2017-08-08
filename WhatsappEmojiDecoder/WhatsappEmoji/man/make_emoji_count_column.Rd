@@ -2,7 +2,7 @@
 % Please edit documentation in R/WhatsappEmoji.R
 \name{make_emoji_count_column}
 \alias{make_emoji_count_column}
-\title{New column with emoji count}
+\title{Make column with emoji count}
 \usage{
 make_emoji_count_column(emoji_data, text_data)
 }
@@ -12,7 +12,7 @@ make_emoji_count_column(emoji_data, text_data)
 \item{text_data}{, data frame}
 }
 \description{
-This function replaces creates new column for each emoji with their count.
+This function creates new column for each emoji with their count.
 }
 \examples{
 clean_data_without_media_with_emoji <- make_emoji_count_column(emoji_all, clean_data_without_media)

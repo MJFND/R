@@ -2,7 +2,7 @@
 % Please edit documentation in R/WhatsappEmoji.R
 \name{install_load_packages}
 \alias{install_load_packages}
-\title{Install and Load Libararies}
+\title{Install and Load Libraries}
 \usage{
 install_load_packages()
 }

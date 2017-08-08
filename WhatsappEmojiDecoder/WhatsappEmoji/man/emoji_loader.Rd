@@ -2,7 +2,7 @@
 % Please edit documentation in R/WhatsappEmoji.R
 \name{emoji_loader}
 \alias{emoji_loader}
-\title{Load Emojis}
+\title{Load Emojis from file}
 \usage{
 emoji_loader(filepath)
 }

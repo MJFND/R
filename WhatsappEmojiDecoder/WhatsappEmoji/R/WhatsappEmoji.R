@@ -10,7 +10,7 @@
 #========================================================
 # Install and Load Packages
 #========================================================
-#' Install and Load Libararies
+#' Install and Load Libraries
 #'
 #' This function installs and loads required libraries
 #' @examples
@@ -46,7 +46,7 @@ media_remove <- function(clean_data)
 #========================================================
 # Emoji Loader Function
 #========================================================
-#' Load Emojis
+#' Load Emojis from file
 #'
 #' This function loads the emojis from csv file and cleans them for usage. 
 #' @param filepath , string, enter file path or file name if present in the same directory
@@ -122,9 +122,9 @@ emoji_replacer <- function(emoji_data, text_data)
 # Function to make new column foe each emoji with count
 #========================================================
 
-#' New column with emoji count
+#' Make column with emoji count
 #'
-#' This function replaces creates new column for each emoji with their count.
+#' This function creates new column for each emoji with their count.
 #' @param emoji_data , data frame
 #' @param text_data , data frame
 #' @examples
