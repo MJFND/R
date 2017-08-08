@@ -4,10 +4,10 @@
 \alias{emoji_loader}
 \title{Load Emojis}
 \usage{
-emoji_loader(filename)
+emoji_loader(filepath)
 }
 \arguments{
-\item{filename}{, string}
+\item{filepath}{, string, enter file path or file name if present in the same directory}
 }
 \description{
 This function loads the emojis from csv file.
