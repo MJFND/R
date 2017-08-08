@@ -1,9 +1,0 @@
-emoji_human_color_ignore
-                        Human Emojis
-emoji_loader            Load Emojis
-emoji_replacer          Replace Emoji with name
-install_load_packages   Install and Load Libararies
-make_emoji_count_column
-                        New column with emoji count
-media_remove            Remove media records
-remove_unused_emoji     Remove unused emojis
