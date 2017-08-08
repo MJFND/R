@@ -1,0 +1,23 @@
+Package: WhatsappEmoji
+Title: What the Package Does (one line, title case)
+Version: 0.0.0.9000
+Authors@R: person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
+Description: What the package does (one paragraph)
+Depends: R (>= 3.0.2)
+License: What license is it under?
+LazyData: true
+RemoteType: github
+RemoteHost: api.github.com
+RemoteRepo: R
+RemoteUsername: MJFND
+RemoteRef: master
+RemoteSha: aac1d4efaae4938c67b3dcc1470912d3ff41970f
+RemoteSubdir: WhatsappEmojiDecorder/WhatsappEmoji
+GithubRepo: R
+GithubUsername: MJFND
+GithubRef: master
+GithubSHA1: aac1d4efaae4938c67b3dcc1470912d3ff41970f
+GithubSubdir: WhatsappEmojiDecorder/WhatsappEmoji
+Author: First Last [aut, cre]
+Maintainer: First Last <first.last@example.com>
+Built: R 3.0.2; ; 2017-08-08 01:25:21 UTC; windows
