@@ -15,6 +15,6 @@ make_emoji_count_column(emoji_data, text_data)
 This function replaces creates new column for each emoji with their count.
 }
 \examples{
-clean_data_without_media_with_emoji <- make_emoji_count_column(clean_data_without_media)
+clean_data_without_media_with_emoji <- make_emoji_count_column(emoji_all, clean_data_without_media)
 }
 

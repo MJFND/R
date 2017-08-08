@@ -128,7 +128,7 @@ emoji_replacer <- function(emoji_data, text_data)
 #' @param emoji_data , data frame
 #' @param text_data , data frame
 #' @examples
-#' clean_data_without_media_with_emoji <- make_emoji_count_column(clean_data_without_media)
+#' clean_data_without_media_with_emoji <- make_emoji_count_column(emoji_all, clean_data_without_media)
 make_emoji_count_column <- function(emoji_data, text_data)
 {
   #Creating columns for each emoji with count
