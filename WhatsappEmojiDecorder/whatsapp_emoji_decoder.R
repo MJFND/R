@@ -1,6 +1,6 @@
 #=======================================================================================
 #
-# File:        Whatsapp_emoji_decorder.R
+# File:        Whatsapp_emoji_decoder.R
 # Author:      Junaid Effendi
 # Description: This is a whatsapp emoji library, for extracting emojis and custom emojis, 
 #              its count.
