@@ -31,7 +31,7 @@ install_load_packages <- function()
 #' @param filepath , string, enter file path or file name if present in the same directory
 #' @keywords media 
 #' @examples
-#' clean_data <- clean_whatsapp_chat("whatsap_friends.txt")
+#' clean_data <- clean_whatsapp_chat("whatsapp_friends.txt")
 clean_whatsapp_chat <- function(filepath)
 {
   all_data = readLines(filepath)
