@@ -1,9 +1,8 @@
 #=======================================================================================
 #
-# File:        WhatsappEmoji.R
+# File:        WhatsappChatCleaner.R
 # Author:      Junaid Effendi
-# Description: This is a whatsapp emoji package, for extracting emojis, human emojis and
-#              custom emojis, their count.
+# Description: This is a whatsapp chat cleaner package, cleans the data and help to extract emojis.
 #
 #=======================================================================================
 
