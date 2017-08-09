@@ -19,7 +19,7 @@ library("scales")
 #========================================================
 # Loading Data
 #========================================================
-all_data = readLines("whatsap_friends.txt")
+all_data = readLines("whatsapp_friends.txt")
 head(all_data)
 
 #========================================================
