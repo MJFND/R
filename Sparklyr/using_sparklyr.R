@@ -89,5 +89,3 @@ data_temp %>% select(age) %>% filter (age > 30) %>%
 # Using xlsx package to write data into Excel workbook
 write.xlsx(x = data, file = "sparklyr_task.xlsx",
            sheetName = "MySheet", row.names = FALSE)
-
-
