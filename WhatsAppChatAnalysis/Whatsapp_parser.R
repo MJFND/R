@@ -29,7 +29,8 @@ head(all_data)
 #Removing the first message
 all_data = all_data[-1]
 
-#Extracting date and time  
+#Extracting date and time
+#Adjust this as per your date and time stamp format
 date_time <- format(strptime(all_data, "%m/%d/%y, %I:%M %p"),"%m/%d/%y, %H:%M")
 head(date_time)
 
