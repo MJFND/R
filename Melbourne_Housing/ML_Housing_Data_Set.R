@@ -226,12 +226,12 @@ mape <- mean(abs((actuals_preds$predicteds - actuals_preds$actuals))/actuals_pre
 
 
 # For examining overfitting lets evaluate training dataset
-preds1 <- predict(caret.cv, housing.train)
-postResample(preds1,housing.train$Price)
-actuals_preds1 <- data.frame(cbind(actuals=housing.train$Price, predicteds=preds1))  # make actuals_predicteds dataframe.
-head(actuals_preds1)
-min_max_accuracy1 <- mean(apply(actuals_preds1, 1, min) / apply(actuals_preds1, 1, max))  
-mape1 <- mean(abs((actuals_preds1$predicteds - actuals_preds1$actuals))/actuals_preds1$actuals)
+preds_train <- predict(caret.cv, housing.train)
+postResample(preds_train,housing.train$Price)
+actuals_preds_train <- data.frame(cbind(actuals=housing.train$Price, predicteds=preds_train))  # make actuals_predicteds dataframe.
+head(actuals_preds_train)
+min_max_accuracy1 <- mean(apply(actuals_preds_train, 1, min) / apply(actuals_preds_train, 1, max))  
+mape1 <- mean(abs((actuals_preds_train$predicteds - actuals_preds_train$actuals))/actuals_preds_train$actuals)
 
 
 
