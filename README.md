@@ -1,5 +1,5 @@
 # Data Science using R
 This repo is about Data Science and Machine Learning. <br />
 Will be adding R code performed on both public and private datasets. <br />
-You can learn more about it at <a href='blog.junaideffendi.com">My Blog</a><br />
+You can learn more about it at <a href='blog.junaideffendi.com'>My Blog</a><br />
 
